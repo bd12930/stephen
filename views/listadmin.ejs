@@ -6,7 +6,7 @@
 
   <div class="box">
   <% newListItems.forEach(function(listItem){ %>
-  <form action="/completed" method="post">
+  <form action="/incompleted" method="post">
       <div class="item">
         <% if (listItem.topic){ %>
            <input type="checkbox" name="checkbox" value="<%=listItem._id%>" onChange="this.form.submit()">

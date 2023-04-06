@@ -194,6 +194,29 @@ app.post("/completed", function (req, res) {
     res.redirect("/");
 });
 
+app.post("/incompleted", function (req, res) {
+
+    const checkedItemId = req.body.checkbox;
+    const listItem = req.body.listItem;
+    const listTimestamp = req.body.listTimestamp;
+    const listName = req.body.listName;
+    const time = date.getTime();
+
+    if (listTimestamp !== "") {
+        console.log(checkedItemId + " " + listItem + " " + mongoose.isValidObjectId(checkedItemId));
+        Item.findOneAndUpdate({ _id: checkedItemId },
+            { timestamp: "" })
+            .then((obj) => {
+                console.log('Updated - ' + obj);
+            })
+            .catch((err) => {
+                console.log('Error: ' + err);
+            });
+        //mongoose.connection.close();
+        console.log("Succesfully updated the document.");
+    }
+    res.redirect("/admin");
+});
 
 
 app.post("/admin", function (req, res) {
