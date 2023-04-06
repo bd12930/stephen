@@ -1,11 +1,13 @@
 //jshint esversion:6
 
 const express = require("express");
+const https = require("https");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 var ObjectID = require('mongodb').ObjectID;
 const date = require(__dirname + "/date.js");
+
 
 const app = express();
 
@@ -66,15 +68,30 @@ app.get("/", function (req, res) {
             }
         })
         .then(savedItem => {
-            res.render("list", {
-                listTitle: date.getDate(),
-                newListItems: savedItem
-            });       
+            const url1 = "https://dummyjson.com/quotes/random";
+            quotes = { text: "", author: "" };
+            https.get(url1, (response) => {
 
+                //console.log(response.statusCode);
+                //console.log(response.headers);
+
+                response.on("data", (data) => {
+                    //process.stdout.write(data);
+                    const quotesData = JSON.parse(data);
+                    //console.log(quotesData);
+                    res.render("list", {
+                        listTitle: date.getDate(),
+                        newListItems: savedItem,
+                        quotes: quotesData
+                    });       
+                })
+                    .on('error', (e) => {
+                        console.error(e);
+                    })
+            });
         })
         .catch(err => console.log(err));
 
-//  res.render("list", {listTitle: "Today", newListItems: items});
 
 });
 
