@@ -13,16 +13,17 @@ exports.getTime = function () {
 };
 
 exports.getDate = function() {
-
   const today = new Date();
 
   const options = {
     weekday: "long",
     day: "numeric",
-    month: "long"
+    month: "long",
+    timeZone: 'Asia/Singapore',
+    hour12: false
   };
 
-  return today.toLocaleDateString("en-US", options);
+    return today.toLocaleDateString("en-SG", options);
 
 };
 
