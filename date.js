@@ -5,11 +5,11 @@ exports.getTime = function () {
     const today = new Date();
 
     const options = {
-        
+    timeZone: 'Asia/Singapore',
+    hour12: false    
     };
 
-    return today.toLocaleString();
-
+    return today.toLocaleString("en-SG", options);
 };
 
 exports.getDate = function() {
