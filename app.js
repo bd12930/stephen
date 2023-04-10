@@ -57,40 +57,76 @@ const List = mongoose.model("List", listSchema);
 
 
 app.get("/", function (req, res) {
-    
-    Item.find({})
-        .then(foundItem => {
-            if (foundItem.length === 0) {
-                console.log("Succesfully saved all the items into DB.")
-                return Item.insertMany(defaultItems);
-            } else {
-                return foundItem;
-            }
-        })
-        .then(savedItem => {
-            const url1 = "https://dummyjson.com/quotes/random";
-            quotes = { text: "", author: "" };
-            https.get(url1, (response) => {
+    if (req.query.mode !== "new") {
+        Item.find({})
+            .then(foundItem => {
+                if (foundItem.length === 0) {
+                    console.log("Succesfully saved all the items into DB.")
+                    return Item.insertMany(defaultItems);
+                } else {
+                    return foundItem;
+                }
+            })
+            .then(savedItem => {
+                const url1 = "https://dummyjson.com/quotes/random";
+                quotes = { text: "", author: "" };
+                https.get(url1, (response) => {
 
-                //console.log(response.statusCode);
-                //console.log(response.headers);
+                    //console.log(response.statusCode);
+                    //console.log(response.headers);
 
-                response.on("data", (data) => {
-                    //process.stdout.write(data);
-                    const quotesData = JSON.parse(data);
-                    //console.log(quotesData);
-                    res.render("list", {
-                        listTitle: date.getDate(),
-                        newListItems: savedItem,
-                        quotes: quotesData
-                    });       
-                })
-                    .on('error', (e) => {
-                        console.error(e);
+                    response.on("data", (data) => {
+                        //process.stdout.write(data);
+                        const quotesData = JSON.parse(data);
+                        //console.log(quotesData);
+                        res.render("list", {
+                            listTitle: date.getDate(),
+                            newListItems: savedItem,
+                            quotes: quotesData
+                        });
                     })
-            });
-        })
-        .catch(err => console.log(err));
+                        .on('error', (e) => {
+                            console.error(e);
+                        })
+                });
+            })
+            .catch(err => console.log(err));
+    }
+    else {
+        Item.find({ "topic": true, "timestamp": { $eq: "" } })
+            .then(foundItem => {
+                if (foundItem.length === 0) {
+                    console.log("Succesfully saved all the items into DB.")
+                    return Item.insertMany(defaultItems);
+                } else {
+                    return foundItem;
+                }
+            })
+            .then(savedItem => {
+                const url1 = "https://dummyjson.com/quotes/random";
+                quotes = { text: "", author: "" };
+                https.get(url1, (response) => {
+
+                    //console.log(response.statusCode);
+                    //console.log(response.headers);
+
+                    response.on("data", (data) => {
+                        //process.stdout.write(data);
+                        const quotesData = JSON.parse(data);
+                        //console.log(quotesData);
+                        res.render("list", {
+                            listTitle: date.getDate(),
+                            newListItems: savedItem,
+                            quotes: quotesData
+                        });
+                    })
+                        .on('error', (e) => {
+                            console.error(e);
+                        })
+                });
+            })
+            .catch(err => console.log(err));
+    }
 });
 
 
@@ -206,7 +242,7 @@ app.post("/completed", function (req, res) {
         //mongoose.connection.close();
         console.log("Succesfully updated the document.");
     }
-    res.redirect("/");
+    res.redirect("/?mode=new");
 });
 
 app.post("/incompleted", function (req, res) {

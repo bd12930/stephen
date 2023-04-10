@@ -15,8 +15,8 @@ h1 {
 }
 
 .box {
-  max-width: 400px;
-  margin: 50px auto;
+  max-width: 800px;
+  margin: 1px auto;
   background: white;
   border-radius: 5px;
   box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
