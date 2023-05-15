@@ -118,3 +118,8 @@ footer {
     background-color: lightblue;
     padding: 10px;
 }
+
+.poster-image {
+  width: 80%;
+  margin: 10px;
+}
